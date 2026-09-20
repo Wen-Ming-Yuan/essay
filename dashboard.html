@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-body">
+  <header class="dashboard-header">
+    <h1>PaperPrism 论文库</h1>
+    <div class="header-actions">
+      <button id="btnAtlas" class="btn btn-secondary">语义地图</button>
+      <button id="btnOptions" class="btn btn-ghost">设置</button>
+    </div>
+  </header>
+
+  <section class="filters">
+    <input type="text" id="searchInput" placeholder="全文搜索标题、作者、摘要..." class="search-input">
+    <select id="sourceFilter" class="filter-select">
+      <option value="">全部来源</option>
+      <option value="arxiv">arXiv</option>
+      <option value="ccf">CCF A类</option>
+    </select>
+    <select id="categoryFilter" class="filter-select">
+      <option value="">全部领域</option>
+      <option value="安全">网络与信息安全</option>
+      <option value="AI">人工智能</option>
+      <option value="网络">计算机网络</option>
+      <option value="体系结构">体系结构</option>
+      <option value="软件工程">软件工程</option>
+      <option value="数据库">数据库</option>
+      <option value="图形学">图形学与多媒体</option>
+      <option value="理论">计算机科学理论</option>
+      <option value="HCI">人机交互</option>
+      <option value="交叉">交叉/综合/新兴</option>
+    </select>
+    <select id="yearFilter" class="filter-select"><option value="">全部年份</option></select>
+    <button id="btnExport" class="btn btn-secondary">导出 JSON</button>
+  </section>
+
+  <section class="tag-cloud" id="tagCloud"></section>
+
+  <section class="results">
+    <p class="results-count" id="resultsCount"></p>
+    <div class="paper-grid" id="paperGrid"></div>
+  </section>
+
+  <!-- Topic 创建弹窗 -->
+  <div id="topicModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>创建 Topic</h3>
+      <input type="text" id="topicName" placeholder="Topic 名称">
+      <textarea id="topicSummary" placeholder="一句话总结"></textarea>
+      <div class="modal-actions">
+        <button id="btnSaveTopic" class="btn btn-primary">保存</button>
+        <button id="btnCancelTopic" class="btn btn-ghost">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/ccf-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
