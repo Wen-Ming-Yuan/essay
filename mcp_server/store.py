@@ -28,9 +28,17 @@ class PaperStore:
                     abstract TEXT,
                     tags TEXT,
                     source TEXT,
+                    relevance_score REAL DEFAULT 0,
+                    tldr_background TEXT,
+                    tldr_method TEXT,
+                    tldr_result TEXT,
+                    pdf_path TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+            # 增加索引
+            for idx in ["venue", "year", "source", "relevance_score"]:
+                conn.execute(f"CREATE INDEX IF NOT EXISTS idx_{idx} ON papers({idx})")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_venue ON papers(venue)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_year ON papers(year)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_tags ON papers(tags)")
