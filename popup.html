@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="popup-body">
+  <header class="popup-header">
+    <h1>PaperPrism <span class="badge">CCF</span></h1>
+    <span id="agentStatus" class="agent-status">检测中...</span>
+  </header>
+
+  <section class="stats-grid" id="statsGrid">
+    <div class="stat-card"><span id="statArxiv" class="stat-value">--</span><span class="stat-label">arXiv</span></div>
+    <div class="stat-card"><span id="statCCF" class="stat-value">--</span><span class="stat-label">CCF A类</span></div>
+    <div class="stat-card"><span id="statTopics" class="stat-value">--</span><span class="stat-label">Topics</span></div>
+  </section>
+
+  <section class="actions">
+    <button id="btnFetchCCF" class="btn btn-primary">抓取 CCF A类</button>
+    <button id="btnDashboard" class="btn btn-secondary">仪表板</button>
+  </section>
+  <section class="actions">
+    <button id="btnAtlas" class="btn btn-secondary">语义地图</button>
+    <button id="btnOptions" class="btn btn-ghost">设置</button>
+  </section>
+
+  <section class="progress-section" id="progressSection" style="display:none;">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <p class="progress-text" id="progressText"></p>
+  </section>
+
+  <section class="recent-section">
+    <h2>最近添加</h2>
+    <ul id="recentList" class="recent-list"></ul>
+  </section>
+
+  <script src="js/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
