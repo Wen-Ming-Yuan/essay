@@ -39,23 +39,25 @@ class PaperStore:
             # 增加索引
             for idx in ["venue", "year", "source", "relevance_score"]:
                 conn.execute(f"CREATE INDEX IF NOT EXISTS idx_{idx} ON papers({idx})")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_venue ON papers(venue)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_year ON papers(year)")
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_tags ON papers(tags)")
-
+            try:
+                conn.execute("ALTER TABLE papers ADD COLUMN pdf_path TEXT")
+            except sqlite3.OperationalError:
+                pass
     def save(self, papers: list[dict]) -> int:
         """批量保存，dblp_key 去重，返回新增数量"""
         inserted = 0
         with closing(sqlite3.connect(self.db_path)) as conn:
             for p in papers:
+                if "error" in p:
+                    continue
                 tags = p.get("tags", [])
                 if isinstance(tags, list):
                     tags = ",".join(tags)
                 try:
                     cur =conn.execute("""
                         INSERT OR IGNORE INTO papers
-                        (dblp_key, title, authors, venue, year, doi, url, abstract, tags, source)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        (dblp_key, title, authors, venue, year, doi, url, abstract, tags, source,pdf_path)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
                     """, (
                         p.get("dblp_key"),
                         p.get("title", ""),
@@ -67,6 +69,7 @@ class PaperStore:
                         p.get("abstract", ""),
                         tags,
                         p.get("source", ""),
+                        p.get("pdf_path", ""),
                     ))
                     if cur.rowcount>0:
                         inserted += 1
