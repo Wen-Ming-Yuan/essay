@@ -2,7 +2,6 @@
 import sqlite3
 import json
 from pathlib import Path
-from typing import Optional
 from contextlib import closing
 
 DB_PATH = Path(__file__).parent.parent / "papers.db"
@@ -28,21 +27,18 @@ class PaperStore:
                     abstract TEXT,
                     tags TEXT,
                     source TEXT,
-                    relevance_score REAL DEFAULT 0,
-                    tldr_background TEXT,
-                    tldr_method TEXT,
-                    tldr_result TEXT,
                     pdf_path TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
-            # 增加索引
-            for idx in ["venue", "year", "source", "relevance_score"]:
+            for idx in ["venue", "year", "tags", "source"]:
                 conn.execute(f"CREATE INDEX IF NOT EXISTS idx_{idx} ON papers({idx})")
+            # 兼容旧库：补齐缺失的 pdf_path 列
             try:
                 conn.execute("ALTER TABLE papers ADD COLUMN pdf_path TEXT")
             except sqlite3.OperationalError:
                 pass
+
     def save(self, papers: list[dict]) -> int:
         """批量保存，dblp_key 去重，返回新增数量"""
         inserted = 0
@@ -54,10 +50,11 @@ class PaperStore:
                 if isinstance(tags, list):
                     tags = ",".join(tags)
                 try:
-                    cur =conn.execute("""
+                    cur = conn.execute("""
                         INSERT OR IGNORE INTO papers
-                        (dblp_key, title, authors, venue, year, doi, url, abstract, tags, source,pdf_path)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+                        (dblp_key, title, authors, venue, year, doi, url,
+                         abstract, tags, source, pdf_path)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (
                         p.get("dblp_key"),
                         p.get("title", ""),
@@ -71,7 +68,7 @@ class PaperStore:
                         p.get("source", ""),
                         p.get("pdf_path", ""),
                     ))
-                    if cur.rowcount>0:
+                    if cur.rowcount > 0:
                         inserted += 1
                 except sqlite3.Error:
                     continue
@@ -114,8 +111,12 @@ class PaperStore:
             by_year = conn.execute(
                 "SELECT year, COUNT(*) as cnt FROM papers GROUP BY year ORDER BY year DESC LIMIT 10"
             ).fetchall()
+            by_source = conn.execute(
+                "SELECT source, COUNT(*) as cnt FROM papers GROUP BY source"
+            ).fetchall()
         return {
             "total": total,
             "by_venue": [{"venue": v, "count": c} for v, c in by_venue],
             "by_year": [{"year": y, "count": c} for y, c in by_year],
+            "by_source": [{"source": s, "count": c} for s, c in by_source],
         }
