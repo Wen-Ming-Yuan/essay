@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "PaperPrism + CCF A Tracker",
+  "version": "2.0.0",
+  "description": "本地优先的 arXiv 论文管理器，集成 CCF A类会议自动追踪、LLM分类、语义地图。",
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "notifications",
+    "tabs",
+    "downloads",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://dblp.org/*",
+    "https://export.arxiv.org/*",
+    "https://arxiv.org/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://arxiv.org/*"],
+      "js": ["content/arxiv-watcher.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["atlas.html", "css/style.css", "js/*.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
