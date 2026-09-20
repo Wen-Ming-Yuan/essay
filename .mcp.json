@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "essay-paper-tracker": {
+      "command": "python",
+      "args": ["-m", "mcp_server.server"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}
