@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="options-body">
+  <h1>PaperPrism 设置</h1>
+
+  <section class="settings-section">
+    <h2>LLM 提供商</h2>
+    <select id="llmProvider" class="filter-select">
+      <option value="openai">OpenAI</option>
+      <option value="anthropic">Anthropic</option>
+      <option value="gemini">Google Gemini</option>
+      <option value="deepseek">DeepSeek</option>
+      <option value="moonshot">Moonshot</option>
+      <option value="openrouter">OpenRouter</option>
+      <option value="ollama">Ollama (本地)</option>
+    </select>
+    <input type="password" id="llmApiKey" placeholder="API Key" class="search-input">
+    <input type="text" id="llmModel" placeholder="模型名称（如 gpt-4o-mini）" class="search-input">
+    <button id="btnTestLLM" class="btn btn-secondary">测试连接</button>
+  </section>
+
+  <section class="settings-section">
+    <h2>arXiv 订阅类别</h2>
+    <div class="checkbox-grid" id="arxivCats">
+      <label><input type="checkbox" value="cs.CR"> cs.CR (安全)</label>
+      <label><input type="checkbox" value="cs.AI"> cs.AI</label>
+      <label><input type="checkbox" value="cs.CL"> cs.CL</label>
+      <label><input type="checkbox" value="cs.CV"> cs.CV</label>
+      <label><input type="checkbox" value="cs.LG"> cs.LG</label>
+      <label><input type="checkbox" value="cs.SE"> cs.SE</label>
+    </div>
+  </section>
+
+  <section class="settings-section">
+    <h2>CCF A类自动抓取</h2>
+    <label><input type="checkbox" id="ccfAutoFetch"> 启用每日自动抓取</label>
+  </section>
+
+  <button id="btnSaveSettings" class="btn btn-primary">保存设置</button>
+
+  <script src="options.js"></script>
+</body>
+</html>
