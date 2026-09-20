@@ -1,8 +1,9 @@
 """essay-paper-tracker MCP Server 入口"""
 import sys
-
+_original_stdout = sys.stdout
 # ========== 必须在所有其他导入之前执行 ==========
 sys.stdout = sys.stderr
+# ... 之后在 mcp.run() 前恢复
 # ================================================
 
 import json
