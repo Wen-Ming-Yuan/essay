@@ -67,8 +67,8 @@ def list_ccf_a_venues() -> str:
 
 @mcp.resource("papers://all")
 def resource_all_papers() -> str:
-    """本地论文库的全部论文（最多1000条）"""
-    return json.dumps(store.all(limit=1000), ensure_ascii=False)
+    """本地论文库的全部论文（最多100000条）"""
+    return json.dumps(store.all(limit=100000), ensure_ascii=False)
 
 
 @mcp.resource("papers://venue/{venue}")
@@ -84,4 +84,4 @@ def resource_stats() -> str:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="stdio")
+    mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
