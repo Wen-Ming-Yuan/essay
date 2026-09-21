@@ -18,33 +18,7 @@ class PaperStore:
         self._conn.row_factory = sqlite3.Row
         self.init_schema()   # 用新方法替换原来的 _init_db 调用
 
-    def _init_db(self):
-        with closing(sqlite3.connect(self.db_path)) as conn:
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS papers (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    dblp_key TEXT UNIQUE,
-                    title TEXT NOT NULL,
-                    authors TEXT,
-                    venue TEXT,
-                    year INTEGER,
-                    doi TEXT,
-                    url TEXT,
-                    abstract TEXT,
-                    tags TEXT,
-                    source TEXT,
-                    pdf_path TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
-            for idx in ["venue", "year", "tags", "source"]:
-                conn.execute(f"CREATE INDEX IF NOT EXISTS idx_{idx} ON papers({idx})")
-            # 兼容旧库：补齐缺失的 pdf_path 列
-            try:
-                conn.execute("ALTER TABLE papers ADD COLUMN pdf_path TEXT")
-            except sqlite3.OperationalError:
-                pass
-
+    
     def save(self, papers: list[dict]) -> int:
         """批量保存，dblp_key 去重，返回新增数量"""
         inserted = 0
