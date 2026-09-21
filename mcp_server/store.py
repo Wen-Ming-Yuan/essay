@@ -53,7 +53,7 @@ class PaperStore:
                     if cur.rowcount > 0:
                         inserted += 1
                 except sqlite3.Error as e: 
-                    logger.warning(...)
+                    logger.warning("save 失败 dblp_key=%s: %s", p.get("dblp_key"), e)
         return inserted
 
     def search(self, keyword: str, venue: str = None, year: int = None, limit: int = 100) -> list[dict]:
