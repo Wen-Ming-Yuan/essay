@@ -8,9 +8,15 @@ DB_PATH = Path(__file__).parent.parent / "papers.db"
 
 
 class PaperStore:
-    def __init__(self, db_path: str | Path = DB_PATH):
-        self.db_path = str(db_path)
-        self._init_db()
+    def __init__(self, db_path: str | Path | None = None):
+        # 默认放在仓库根的 data/papers.db，而不是当前工作目录
+        if db_path is None:
+            db_path = Path(__file__).resolve().parents[1] / "data" / "papers.db"
+        self.db_path = Path(db_path)
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
+        self._conn.row_factory = sqlite3.Row
+        self.init_schema()   # 用新方法替换原来的 _init_db 调用
 
     def _init_db(self):
         with closing(sqlite3.connect(self.db_path)) as conn:
