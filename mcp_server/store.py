@@ -50,8 +50,8 @@ class PaperStore:
                     ))
                     if cur.rowcount > 0:
                         inserted += 1
-                except sqlite3.Error:
-                    continue
+                except sqlite3.Error as e: 
+                    logger.warning(...)
         return inserted
 
     def search(self, keyword: str, venue: str = None, year: int = None, limit: int = 100) -> list[dict]:
@@ -114,6 +114,8 @@ class PaperStore:
             area        TEXT,
             doi         TEXT,
             url         TEXT,
+            abstract    TEXT,         
+            pdf_path    TEXT,
             tags        TEXT,
             source      TEXT,
             created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -127,24 +129,24 @@ class PaperStore:
             venue     TEXT PRIMARY KEY,
             last_year INTEGER,
             last_run  TIMESTAMP
-        );
-    """)
-    self._conn.commit()
+         );
+         """)
+        self._conn.commit()
 
 
-def upsert_many(self, rows: list[dict]) -> int:
-    """
-    批量写入，返回真正新插入行数。
-    用 INSERT OR IGNORE 保证幂等，不会覆盖已有记录。
-    """
-    import json as _json
+    def upsert_many(self, rows: list[dict]) -> int:
+        """
+        批量写入，返回真正新插入行数。
+        用 INSERT OR IGNORE 保证幂等，不会覆盖已有记录。
+         """
+        import json as _json
 
-    payload = []
-    for r in rows:
-        key = r.get("dblp_key") or r.get("key") or ""
-        title = r.get("title") or ""
-        if not key or not title or "error" in r:
-            continue
+        payload = []
+        for r in rows:
+            key = r.get("dblp_key") or r.get("key") or ""
+            title = r.get("title") or ""
+            if not key or not title or "error" in r:
+                continue
 
         authors = r.get("authors", [])
         if isinstance(authors, list):
@@ -168,18 +170,18 @@ def upsert_many(self, rows: list[dict]) -> int:
             "source":     r.get("source", "dblp"),
         })
 
-    if not payload:
-        return 0
+        if not payload:
+            return 0
 
-    sql = """
+        sql = """
         INSERT OR IGNORE INTO papers
         (dblp_key, title, authors, year, venue, venue_kind, area, doi, url, tags, source)
         VALUES (:dblp_key, :title, :authors, :year, :venue, :venue_kind,
                 :area, :doi, :url, :tags, :source)
     """
-    with self._conn:
-        cur = self._conn.executemany(sql, payload)
-    return cur.rowcount
+        with self._conn:
+            cur = self._conn.executemany(sql, payload)
+        return cur.rowcount
 
 
 def get_fetch_state(self, venue: str) -> dict | None:
