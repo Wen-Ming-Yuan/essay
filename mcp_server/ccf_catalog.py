@@ -148,6 +148,7 @@ def gaps() -> list[Venue]:
     """返回本次补齐的 7 个缺口，便于自检。"""
     return [v for v in ALL_VENUES if v.was_gap]
 
+ALL_CCF_A: dict[str, str] = {v.abbr: v.dblp_key for v in ALL_VENUES}
 
 if __name__ == "__main__":
     print(f"total={len(ALL_VENUES)} conf={len(CONFERENCES)} journal={len(JOURNALS)}")
