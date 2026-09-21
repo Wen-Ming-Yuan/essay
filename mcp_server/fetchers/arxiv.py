@@ -39,8 +39,9 @@ def fetch_arxiv(category: str, keyword: str, max_results: int = 50) -> list[dict
             for a in entry.findall("atom:author", ns)
         ]
         link = entry.findtext("atom:id", "", ns)
+        arx_id = link.rsplit("/", 1)[-1] if link else ""
         papers.append({
-            "dblp_key": None,
+            "dblp_key":f"arxiv:{arx_id}" ,
             "title": title,
             "authors": authors,
             "venue": f"arXiv:{category}",
