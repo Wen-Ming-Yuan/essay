@@ -6,7 +6,7 @@ CCF 第七版（2026）A 类会议 / 期刊 DBLP 标识符目录。
 
 from dataclasses import dataclass, field
 from typing import Literal
-
+ 
 Kind = Literal["conference", "journal"]
 
 
