@@ -42,7 +42,7 @@ def extract_pdf_metadata(pdf_path: str) -> Dict:
             "title": title, "authors": authors, "abstract": abstract,
             "doi": doi, "pdf_path": str(path.resolve()),
             "source": "pdf", "num_pages": len(reader.pages),
-            "tags": ["pdf", "local"],
+            "tags": ["pdf", "local"],"dblp_key": f"doi:{doi}" if doi else f"pdf:{str(path.resolve())}",
         }
     except Exception as e:
         logger.error(f"PDF 解析失败 {pdf_path}: {e}")
