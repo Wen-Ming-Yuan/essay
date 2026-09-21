@@ -1,10 +1,8 @@
 """essay-paper-tracker MCP Server 入口"""
 import sys
 _original_stdout = sys.stdout
-# ========== 必须在所有其他导入之前执行 ==========
-sys.stdout = sys.stderr
-# ... 之后在 mcp.run() 前恢复
-# ================================================
+sys.stdout = sys.stderr# 所有 import 期间可能的 print 都被重定向
+
 
 import json
 import logging
@@ -139,4 +137,6 @@ def resource_stats() -> str:
 
 
 if __name__ == "__main__":
+    # 恢复 stdout，让 FastMCP 的 JSON-RPC / HTTP 传输正常使用
+    sys.stdout = _original_stdout
     mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
