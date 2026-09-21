@@ -1,9 +1,7 @@
 {
   "mcpServers": {
     "essay-paper-tracker": {
-      "command": "python",
-      "args": ["-m", "mcp_server.server"],
-      "cwd": "${workspaceFolder}"
+     "url": "http://127.0.0.1:8000/mcp"
     }
   }
 }
