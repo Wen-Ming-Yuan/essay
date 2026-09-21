@@ -9,10 +9,10 @@ from pathlib import Path
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from mcp_server.ccf_catalog import ALL_VENUES
-from mcp_server.store import PaperStore
-from mcp_server.fetchers.ccf import fetch_venue_via_api
-from mcp_server.fetchers.dblp_dump import ingest as ingest_dump
+from .ccf_catalog import ALL_VENUES
+from .store import PaperStore
+from .fetchers.ccf import fetch_venue_via_api
+from .fetchers.dblp_dump import ingest as ingest_dump
 
 log = logging.getLogger("essay.scheduler")
 
