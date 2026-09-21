@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from contextlib import closing
 
+logger = logging.getLogger(__name__)
 DB_PATH = Path(__file__).parent.parent / "papers.db"
 
 
@@ -148,15 +149,15 @@ class PaperStore:
             if not key or not title or "error" in r:
                 continue
 
-        authors = r.get("authors", [])
-        if isinstance(authors, list):
-            authors = _json.dumps(authors, ensure_ascii=False)
+            authors = r.get("authors", [])
+            if isinstance(authors, list):
+                authors = _json.dumps(authors, ensure_ascii=False)
 
-        tags = r.get("tags", [])
-        if isinstance(tags, list):
-            tags = ",".join(tags)
+            tags = r.get("tags", [])
+            if isinstance(tags, list):
+                tags = ",".join(tags)
 
-        payload.append({
+            payload.append({
             "dblp_key":   key,
             "title":      title,
             "authors":    authors,
@@ -170,18 +171,18 @@ class PaperStore:
             "source":     r.get("source", "dblp"),
         })
 
-        if not payload:
-            return 0
+            if not payload:
+                return 0
 
-        sql = """
+            sql = """
         INSERT OR IGNORE INTO papers
         (dblp_key, title, authors, year, venue, venue_kind, area, doi, url, tags, source)
         VALUES (:dblp_key, :title, :authors, :year, :venue, :venue_kind,
                 :area, :doi, :url, :tags, :source)
     """
-        with self._conn:
-            cur = self._conn.executemany(sql, payload)
-        return cur.rowcount
+            with self._conn:
+                cur = self._conn.executemany(sql, payload)
+            return cur.rowcount
 
 
 def get_fetch_state(self, venue: str) -> dict | None:
